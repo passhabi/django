@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.contrib.auth import login
+
 
 # Create your views here.
 def homepage(request):
@@ -27,6 +29,8 @@ def signup(request):
 
         user = User(username=username, email=email, password=password)
         user.save()
+
+        login(request, user)
 
     except IntegrityError:
          return signup_render(request, "The username exists. Choose another username.")
