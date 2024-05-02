@@ -17,7 +17,7 @@ def signup(request):
     
     "(POST) Registering the new user:"    
     if request.POST['password1'] != request.POST['password2']:
-        return signup_render(request, "The passwords you entered don't match.")
+        return signup_render(request, ["The passwords you entered don't match."])
     
     username = request.POST['username']
     password = request.POST['password1']
@@ -33,23 +33,30 @@ def signup(request):
         login(request, user)
 
     except IntegrityError:
-         return signup_render(request, "The username exists. Choose another username.")
+         return signup_render(request, ["The username exists. Choose another username."])
     
     except ValidationError as error_list:
-         return signup_render(request, error_message=error_list)
+         return signup_render(request, error_msg_list=error_list)
     
     return redirect('signedup')
 
 
-def signup_render(request, error_message=""):
+def signup_render(request, error_msg_list=[]):
         
         email = ""
-
-        if error_message:
+        if error_msg_list:
             email = request.POST['email']
+            
+
+        print(error_msg_list)
+        print(type(error_msg_list))
+        print(list)
+        print(type(list))
+
+        assert(type(error_msg_list) == list)
 
         return render(request, 'todolist\signup.html', {'django_form': UserCreationForm(),
-                                                        'error_message': error_message,
+                                                        'error_message': error_msg_list,
                                                         'cache_email_input': email})
 
 def signedup(request):
