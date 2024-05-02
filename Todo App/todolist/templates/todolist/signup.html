@@ -1,10 +1,22 @@
 <h1> Sign Up</h1>
 
+
+{% for error in error_message %}
+<a style="color: chocolate;">
+    {{ error }}
+</a>
+</br>
+{% endfor %}
+
+<p></p>
 <form method="post">
-    {{ django_form }}
-    <button type="submit"> Sing Up</button>
+    {% csrf_token %}
+    <label for="id_email">Email:</label>
+    <input id="id_email_input" maxlength="150" name="email" placeholder="example@email.com"
+        value="{{ cache_email_input }}" />
+    {{ django_form.as_p }}
+    <button type="submit">Sing Up</button>
 </form>
 
 
-<a  href="{% url 'homepage' %}"> Home Page</a>
- 
+<a href="{% url 'homepage' %}"> Home Page</a>
