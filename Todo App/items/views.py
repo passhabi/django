@@ -17,7 +17,7 @@ def signup(request):
     
     "(POST) Registering the new user:"    
     if request.POST['password1'] != request.POST['password2']:
-        return signup_render(request, ["The passwords you entered don't match."])
+        return signup_render(request, ValidationError("The passwords you entered don't match."))
     
     username = request.POST['username']
     password = request.POST['password1']
@@ -33,31 +33,26 @@ def signup(request):
         login(request, user)
 
     except IntegrityError:
-         return signup_render(request, ["The username exists. Choose another username."])
+         return signup_render(request, ValidationError("The username exists. Choose another username."))
     
     except ValidationError as error_list:
-         return signup_render(request, error_msg_list=error_list)
+         return signup_render(request, error_msg=error_list)
     
-    return redirect('signedup')
+    return redirect('todolist')
 
 
-def signup_render(request, error_msg_list=[]):
+def signup_render(request, error_msg=ValidationError("")):
         
         email = ""
-        if error_msg_list:
+        if error_msg != ValidationError(""):
             email = request.POST['email']
             
 
-        print(error_msg_list)
-        print(type(error_msg_list))
-        print(list)
-        print(type(list))
-
-        assert(type(error_msg_list) == list)
+        assert(type(error_msg) == ValidationError)
 
         return render(request, 'items\signup.html', {'django_form': UserCreationForm(),
-                                                        'error_message': error_msg_list,
+                                                        'error_message': error_msg,
                                                         'cache_email_input': email})
 
-def signedup(request):
-     return render(request, 'items\signedup.html')
+def todolist(request):
+     return render(request, r'items\todolist.html')
