@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from todolist.views import *
+from items.views import *
 
 urlpatterns = [
     path("", homepage, name='homepage'),

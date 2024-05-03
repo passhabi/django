@@ -55,9 +55,9 @@ def signup_render(request, error_msg_list=[]):
 
         assert(type(error_msg_list) == list)
 
-        return render(request, 'todolist\signup.html', {'django_form': UserCreationForm(),
+        return render(request, 'items\signup.html', {'django_form': UserCreationForm(),
                                                         'error_message': error_msg_list,
                                                         'cache_email_input': email})
 
 def signedup(request):
-     return render(request, 'todolist\signedup.html')
+     return render(request, 'items\signedup.html')
