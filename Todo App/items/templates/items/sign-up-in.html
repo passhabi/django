@@ -1,0 +1,74 @@
+<style>
+    .parrent {
+        width: 99%;
+        margin: 0;
+        padding-left: 1%;
+        /* background-color: brown; */
+        display: inline-block;
+
+    }
+
+    .first {
+        width: 60%;
+        /* background-color: aliceblue; */
+        float: left;
+    }
+
+    .second {
+        padding-top: 5%;
+        width: 40%;
+        /* background-color: rgb(40, 177, 177); */
+        float: right;
+    }
+
+    hr {
+        margin-right: 10%;
+    }
+</style>
+<div class="parrent">
+    <div class="first">
+        <h1 style="text-align: left;"">Sign Up</h1>
+        <hr><br>
+        <form method="post">
+            {% csrf_token %}
+            <label for="id_email">Email:</label>
+            <input id="id_email_input" maxlength="150" name="email" placeholder="example@email.com"
+                value="{{ cache_email_input }}" />
+            {{ signup_form.as_p }}
+            <button type="submit">Sing Up</button>
+        </form>
+        <div>
+            {% for error in signup_errors %}
+            <a style="color: crimson;">
+                {{ error }}
+            </a>
+            </br>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="second">
+        <h2>Sign In</h2>
+        <hr><br>
+        <form method="post">
+            {% csrf_token %}
+            {{ signin_form.as_p }}
+            <button type="submit">Sing In</button>
+        </form>
+        <div>
+            {% for error in signin_errors %}
+            <a style="color: crimson;">
+                {{ error }}
+            </a>
+            </br>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+<div style="text-align: center;">
+    <p>
+    <h3>
+        <a href="{% url 'homepage' %}">Home Page</a>
+    </h3>
+    </p>
+</div>

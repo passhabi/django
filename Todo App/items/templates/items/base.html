@@ -1,0 +1,35 @@
+<html>
+
+<head>
+    <title>codedamn HTML Playground</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--- Link to flexbox.css---->
+    <link rel="stylesheet" href="css/flexbox.css" />
+</head>
+
+<body>
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <a style="font-weight: bold;">Logged in as {{ user.username }}</a>
+        <button type="submit">Sign Out</button>
+    </form>
+    {% else %}
+    <a href="{% url 'signupin' %}">Sign Up / Sing In</a>
+    {% endif %}
+
+    {% block content %}
+
+    {% endblock %}
+
+
+    <div class="parent">
+        <div class="child1"></div>
+        <div class="child2"></div>
+    </div>
+    <script src="https://bit.ly/codedamn-web-console"></script>
+    <script src="/script.js"></script>
+</body>
+
+</html>
