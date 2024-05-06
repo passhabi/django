@@ -15,3 +15,5 @@ class Todolist(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     completion_time = models.DateTimeField(null=True, blank=True)  
 
+    def __str__(self) -> str:
+        return self.title
