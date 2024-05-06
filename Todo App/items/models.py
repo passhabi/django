@@ -11,7 +11,7 @@ class Todolist(models.Model):
 
     category = models.IntegerField(blank=True)
 
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     creation_date = models.DateTimeField(auto_now_add=True)
     completion_time = models.DateTimeField(null=True, blank=True)  
 

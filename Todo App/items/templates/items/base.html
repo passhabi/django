@@ -19,9 +19,8 @@
         <a style="font-weight: bold;">Logged in as {{ user.username }}</a>
         <button type="submit">Sign Out</button>
         <!-- links -->
-
-        <a href="{% url 'todolist' %}">Todolist</a>
-        <a href="{% url 'homepage' %}">Home Page</a>
+        &nbsp;<a href="{% url 'homepage' %}">Home Page</a>&nbsp; | &nbsp;
+        <a href="{% url 'todolist' %}">Todolist</a>&nbsp;
     </form>
     {% else %}
     <a href="{% url 'signupin' %}">Sign Up / Sing In</a>

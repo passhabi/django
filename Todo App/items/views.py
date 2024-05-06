@@ -6,7 +6,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth import login, logout, authenticate, aauthenticate, alogin
 from django.core.exceptions import PermissionDenied
-
+from items.models import Todolist
 
 # Create your views here.
 def homepage(request):
@@ -82,7 +82,8 @@ def signup(request):
 
 
 def todolist(request):
-     return render(request, r'items\todolist.html')
+     todo_items = Todolist.objects.filter(user = request.user)
+     return render(request, r'items\todolist.html', {'todo_obj': todo_items})
 
 
 def sign_in(request):
@@ -96,5 +97,5 @@ def sign_in(request):
 def sign_out(request):
     if request.method == "POST":
         logout(request)
-        return redirect('todolist')
+        return redirect('homepage')
     return redirect('homepage')
