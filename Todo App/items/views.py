@@ -99,4 +99,10 @@ def todolist(request):
      return render(request, r'items\todolist.html', {'todo_obj': todo_items})
 
 def add_todo(request):
-    return render(request, 'items/todolist_additem.html', {'todo_additem_form': TodolistForm()})
+    if request.method == 'GET':
+        return render(request, 'items/todolist_additem.html', {'todo_additem_form': TodolistForm()})
+
+    newitem = TodolistForm(request.POST)
+    newitem.save(commit=False).user = request.user
+    newitem.save()
+    return redirect('todolist')
