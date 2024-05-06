@@ -11,6 +11,8 @@
         {% for todo in todo_obj %}
         <button type="button" class="list-group-item list-group-item-action">{{ todo.title }}</button>
         {% endfor %}
+        <br>
+        <a href="{% url 'add_todo' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Add</a>
     </div>
 </div>
 {% endblock %}

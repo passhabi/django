@@ -25,7 +25,6 @@ def sign_up_in(request):
     # Then it is a Sing-in:
     if 'password' in request.POST:
         return sign_in(request)
-
         
 def render_sign_up_in(request, error_msg=ValidationError(""),  sign_up_or_in=None):
 
@@ -80,12 +79,6 @@ def signup(request):
     
     return redirect('todolist')
 
-
-def todolist(request):
-     todo_items = Todolist.objects.filter(user = request.user)
-     return render(request, r'items\todolist.html', {'todo_obj': todo_items})
-
-
 def sign_in(request):
     user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
     if user is None:
@@ -99,3 +92,11 @@ def sign_out(request):
         logout(request)
         return redirect('homepage')
     return redirect('homepage')
+
+
+def todolist(request):
+     todo_items = Todolist.objects.filter(user = request.user)
+     return render(request, r'items\todolist.html', {'todo_obj': todo_items})
+
+def add_todo(request):
+    

@@ -8,7 +8,6 @@ class Todolist(models.Model):
     description = models.TextField(blank=True)
     due_date= models.DateTimeField(blank=True)
     priority = models.SmallIntegerField(blank=True)
-
     category = models.IntegerField(blank=True)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
