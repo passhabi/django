@@ -4,9 +4,9 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.contrib.auth import login, logout, authenticate, aauthenticate, alogin
-from django.core.exceptions import PermissionDenied
+from django.contrib.auth import login, logout, authenticate
 from items.models import Todolist
+from items.forms import TodolistForm
 
 # Create your views here.
 def homepage(request):
@@ -99,4 +99,4 @@ def todolist(request):
      return render(request, r'items\todolist.html', {'todo_obj': todo_items})
 
 def add_todo(request):
-    pass
+    return render(request, 'items/todolist_additem.html', {'todo_additem_form': TodolistForm()})
