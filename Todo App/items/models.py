@@ -3,21 +3,19 @@ from datetime import datetime
 from django.contrib.auth.models import User
 
 
-
 PRIORITY_CHOICES = {
-    "MR": 1,
-    "MRS": 2,
-    "MS": 3,
-    "MS": 4,
+    1: 'Important and Urgent',
+    2: 'Important',
+    3: 'Urgent',
+    4: 'Not Urgent, Important',
 }
-
 
 # Create your models here.
 class Todolist(models.Model):
     title = models.CharField(null=False,blank=False, max_length=300)
     description = models.TextField(blank=True)
     due_date= models.DateTimeField(blank=True)
-    priority = models.SmallIntegerField(blank=True, choices=[1,2,3,4])
+    priority = models.SmallIntegerField(blank=True, choices=PRIORITY_CHOICES)
     category = models.IntegerField(blank=True)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
