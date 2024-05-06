@@ -99,4 +99,4 @@ def todolist(request):
      return render(request, r'items\todolist.html', {'todo_obj': todo_items})
 
 def add_todo(request):
-    
+    pass
