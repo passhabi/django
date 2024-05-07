@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.db import IntegrityError
@@ -105,7 +105,10 @@ def todolist(request):
      
 
 def detailed_todo(request, id):
-    return HttpResponse(f"<h1>{id}</h1>")
+    # return HttpResponse(f"<h1>{id}</h1>")
+    todo  = get_object_or_404(Todolist, pk=id)
+    filled_form = TodolistForm(instance=todo)
+    return render(request, "items/edit.html", {'form': filled_form})
 
 def add_todo(request):
     if request.method == 'GET':
