@@ -104,6 +104,9 @@ def todolist(request):
      return render(request, r'items\todolist.html', {'todo_obj': todo_items})
      
 
+def detailed_todo(request, id):
+    return HttpResponse(f"<h1>{id}</h1>")
+
 def add_todo(request):
     if request.method == 'GET':
         return render(request, 'items/todolist_additem.html', {'todo_additem_form': TodolistForm()})
