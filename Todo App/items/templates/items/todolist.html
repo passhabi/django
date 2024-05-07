@@ -1,6 +1,8 @@
 {% extends "items\base.html" %}
 {% block content %}
+<style>
 
+</style>
 <div style="width: 500px;">
     <h2> Here is you todo list</h2>
     <br>
@@ -9,6 +11,7 @@
             Title
         </button>
         {% for todo in todo_obj %}
+        <a href="{% url 'todolist' %}{{ todo.id }}" style="text-decoration: none;">
             {% if todo.priority == 1 %}
                 <button type="button" class="list-group-item list-group-item-action" style="color: red;">
                     {{ todo.title }} - {{ todo.creation_date|date:'M d' }}</button>
@@ -22,6 +25,7 @@
                 <button type="button" class="list-group-item list-group-item-action">
                     {{ todo.title }}</button>
             {% endif %}
+        </a>
         {% endfor %}
         <br>
         <a href="{% url 'add_todo' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Add</a>
