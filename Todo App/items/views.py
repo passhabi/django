@@ -8,6 +8,8 @@ from django.contrib.auth import login, logout, authenticate
 from items.models import Todolist
 from items.forms import TodolistForm
 
+from datetime import datetime
+
 # Create your views here.
 def homepage(request):
     return render(request, "items/homepage.html")
@@ -95,16 +97,15 @@ def sign_out(request):
 
 
 def todolist(request):
-     print("\33[35m", request.user)
-     print("\33[35m", dir(request.user))
+     # if the user is not athuraized.
      if not request.user.id:
         raise PermissionDenied
     
-     todo_items = Todolist.objects.filter(user = request.user)
-     return render(request, r'items\todolist.html', {'todo_obj': todo_items})
+     todo_items = Todolist.objects.filter(user = request.user, completion_time=None)
+     completed_todos = Todolist.objects.filter(user = request.user). exclude(completion_time=None)
+     return render(request, r'items\todolist.html', {'todo_items': todo_items, 'completed_todos': completed_todos})
      
 def detailed_todo(request, id):
-    # return HttpResponse(f"<h1>{id}</h1>")
     todo  = get_object_or_404(Todolist, pk=id, user=request.user)
 
     if request.method == 'GET':
@@ -125,4 +126,31 @@ def add_todo(request):
     newitem.save(commit=False).user = request.user
     newitem.save()
     return redirect('todolist')
+
+def delete_todo(request, id):
+    if request.method == 'GET':
+        return redirect('todolist')
+    
+    return redirect('todolist')
+
+
+def complete_todo(request, id):
+    if request.method == 'GET':
+        return redirect('todolist')
+
+    todo = Todolist.objects.filter(id=id, user=request.user)
+    todo.update(completion_time=datetime.now())
+    
+    return redirect('todolist')
+
+
+def un_complete_todo(request, id):
+    if request.method == 'GET':
+        return redirect('todolist')
+
+    todo = Todolist.objects.filter(id=id, user=request.user)
+    todo.update(completion_time=None)
+    
+    return redirect('todolist')
+
 
