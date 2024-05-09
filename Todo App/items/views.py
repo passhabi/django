@@ -103,12 +103,19 @@ def todolist(request):
      todo_items = Todolist.objects.filter(user = request.user)
      return render(request, r'items\todolist.html', {'todo_obj': todo_items})
      
-
 def detailed_todo(request, id):
     # return HttpResponse(f"<h1>{id}</h1>")
     todo  = get_object_or_404(Todolist, pk=id)
-    filled_form = TodolistForm(instance=todo)
-    return render(request, "items/edit.html", {'form': filled_form})
+
+    if request.method == 'GET':
+        filled_form = TodolistForm(instance=todo)
+        return render(request, "items/edit.html", {'form': filled_form})
+    
+    # POST:
+    todolist_form = TodolistForm(request.POST, instance=todo)
+    todolist_form.save()
+    return redirect('todolist')
+
 
 def add_todo(request):
     if request.method == 'GET':
@@ -118,3 +125,4 @@ def add_todo(request):
     newitem.save(commit=False).user = request.user
     newitem.save()
     return redirect('todolist')
+
