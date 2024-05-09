@@ -105,7 +105,7 @@ def todolist(request):
      
 def detailed_todo(request, id):
     # return HttpResponse(f"<h1>{id}</h1>")
-    todo  = get_object_or_404(Todolist, pk=id)
+    todo  = get_object_or_404(Todolist, pk=id, user=request.user)
 
     if request.method == 'GET':
         filled_form = TodolistForm(instance=todo)
