@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError, PermissionDenied
 from django.contrib.auth import login, logout, authenticate
 from items.models import Todolist
 from items.forms import TodolistForm
+from django.contrib.auth.decorators import login_required
 
 from datetime import datetime
 
@@ -95,16 +96,13 @@ def sign_out(request):
         return redirect('homepage')
     return redirect('homepage')
 
-
+@login_required(redirect_field_name='signupin')
 def todolist(request):
-     # if the user is not athuraized.
-     if not request.user.id:
-        raise PermissionDenied
-    
      todo_items = Todolist.objects.filter(user = request.user, completion_time=None)
      completed_todos = Todolist.objects.filter(user = request.user). exclude(completion_time=None)
      return render(request, r'items\todolist.html', {'todo_items': todo_items, 'completed_todos': completed_todos})
-     
+
+@login_required
 def detailed_todo(request, id):
     todo  = get_object_or_404(Todolist, pk=id, user=request.user)
 
@@ -117,8 +115,8 @@ def detailed_todo(request, id):
     todolist_form.save()
     return redirect('todolist')
 
-
-def add_todo(request):
+@login_required
+def add_todo(request):      
     if request.method == 'GET':
         return render(request, 'items/todolist_additem.html', {'todo_additem_form': TodolistForm()})
 
@@ -127,13 +125,17 @@ def add_todo(request):
     newitem.save()
     return redirect('todolist')
 
+@login_required
 def delete_todo(request, id):
     if request.method == 'GET':
         return redirect('todolist')
     
+    todo = get_object_or_404(Todolist, id=id, user=request.user)
+    todo.delete()
+
     return redirect('todolist')
 
-
+@login_required
 def complete_todo(request, id):
     if request.method == 'GET':
         return redirect('todolist')
@@ -143,7 +145,7 @@ def complete_todo(request, id):
     
     return redirect('todolist')
 
-
+@login_required
 def un_complete_todo(request, id):
     if request.method == 'GET':
         return redirect('todolist')

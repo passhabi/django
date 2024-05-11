@@ -72,7 +72,7 @@
         {% for todo in completed_todos %}
         <a href="{% url 'todolist' %}{{ todo.id }}" style="text-decoration: none;">
         <button type="button" class="list-group-item list-group-item-action not-active" style="color: darkgrey;">
-            {{ todo.title }}
+            <s>{{ todo.title }}</s>
         </button>
         </a>
         {% endfor %}
