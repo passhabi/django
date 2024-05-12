@@ -61,7 +61,8 @@
                     <li><a href="{% url 'complete' %}" class="nav-link px-2 link-body-emphasis">Completed</a></li>
                 {% endif %}
             </ul>
-            {% block login %}{% endblock %}{% if user.is_authenticated %}
+            
+            {% if user.is_authenticated %}
                 <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
                     <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
                 </form>
@@ -84,10 +85,7 @@
                     </ul>
                 </div>
             {% else %}
-                <div class="text-end">
-                    <a href="{% url 'signupin' %}" role="button" class="btn btn-light me-2">Login</a>
-                    <a href="{% url 'signupin' %}" role="button" class="btn btn-warning">Sign-up</a>
-                </div>
+                {% block login %}{% endblock %}
             {% endif %}
         </div>
     </div>
