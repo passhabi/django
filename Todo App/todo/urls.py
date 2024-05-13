@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from items.views import *
 
-urlpatterns = [
+urlpatterns = ([
     path("", homepage, name='homepage'),
     path('admin/', admin.site.urls),
     path('todolist/', todolist, name='todolist'),
@@ -36,3 +36,4 @@ urlpatterns = [
     path('logout/', sign_out, name='logout'),
     path('profile/', profile, name='profile'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+               + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))

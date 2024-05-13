@@ -85,7 +85,7 @@ def signup(request):
     except ValidationError as error_list:
         return render_sign_up_in(request, error_msg=error_list, sign_up_or_in='up')
 
-    return redirect('todolist')
+    return redirect('homepage')
 
 
 def sign_in(request):

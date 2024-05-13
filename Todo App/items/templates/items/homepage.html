@@ -10,8 +10,14 @@
             <p class="lead mb-4">Become focused, organized, and calm with IDo. The world’s #1 task manager and to-do
                 list app.</p>
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                <a href="{% url 'signupin' %}" type="button" class="btn btn-primary btn-lg px-4 gap-3">Start here
-                </a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'add_todo' %}" type="button" class="btn btn-primary btn-lg px-4 gap-3">Start here
+                    </a>
+                {% else %}
+                    <a href="{% url 'signupin' %}" type="button" class="btn btn-primary btn-lg px-4 gap-3">Start here
+                        {#todo: change the singupin like #}
+                    </a>
+                {% endif %}
             </div>
         </div>
 
@@ -19,7 +25,7 @@
 
     <div class="container px-4 py-5" id="icon-grid">
         <h2 class="pb-2 border-bottom">Features</h2>
-    
+
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-5">
             {% for feature in features %}
                 <div class="col d-flex align-items-start">
