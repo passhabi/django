@@ -5,7 +5,7 @@ from django.db import IntegrityError
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.contrib.auth import login, logout, authenticate
-from items.models import Todolist
+from items.models import Todolist, Features
 from items.forms import TodolistForm
 from django.contrib.auth.decorators import login_required
 
@@ -14,7 +14,9 @@ from datetime import datetime
 
 # Create your views here.
 def homepage(request):
-    return render(request, "items/homepage.html")
+    features = Features.objects.all()
+
+    return render(request, "items/homepage.html", {'features': features})
 
 
 def sign_up_in(request):
