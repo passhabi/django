@@ -19,49 +19,25 @@ def homepage(request):
     return render(request, "homepage.html", {'features': features})
 
 
-def sign_up_in(request):
-    if request.method == "GET":
-        return render_sign_up_in(request)
-
-    # It's a POST request:
-    # Findout if its sing-up?!
-    if 'password1' in request.POST:
-        # Its a singpup request:
-        return signup(request)
-
-    # Then it is a Sing-in:
-    if 'password' in request.POST:
-        return sign_in(request)
-
-
-def render_sign_up_in(request, error_msg=ValidationError(""), sign_up_or_in=None):
-    cache_email_input, signup_errors, signin_errors = "", "", ""
-    # If there is an error:
-    if error_msg != ValidationError(""):
-        if sign_up_or_in is "in":
-            signin_errors = error_msg
-        elif sign_up_or_in is "up":
-            cache_email_input = request.POST['email']  # cache the email in the template form.
-            signup_errors = error_msg
+def signin(request):
+    if request.method == "POST":
+        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+        if user:
+            login(request, user)
+            return redirect('todolist')
         else:
-            raise ValueError(
-                "Either wrong value or no value set for the sign_up_or_in argument." +
-                " The value must be set either 'in' or 'up' if the error_msg has been set.")
-
-    assert (type(error_msg) == ValidationError)
-
-    return render(request, 'items\sign-up-in.html', {'signup_form': UserCreationForm(),
-                                                     'signin_form': AuthenticationForm(),
-                                                     'signup_errors': signup_errors,
-                                                     'signin_errors': signin_errors,
-                                                     'cache_email_input': cache_email_input,
-                                                     })
+            return render(request, 'sign-in.html', {'errors':["The combination of username and password do not exist.",]})
+        
+    # It's a GET
+    return render(request, 'sign-in.html')
+    
+    
 
 
 def signup(request):
     "(POST) Registering the new user:"
     if request.POST['password1'] != request.POST['password2']:
-        return render_sign_up_in(request, error_msg=ValidationError("The passwords you entered don't match."),
+        return render_sign_in(request, error_msg=ValidationError("The passwords you entered don't match."),
                                  sign_up_or_in='up')
 
     username = request.POST['username']
@@ -88,16 +64,6 @@ def signup(request):
     return redirect('homepage')
 
 
-def sign_in(request):
-    user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
-    if user is None:
-        return render_sign_up_in(request, ValidationError("The combination of username and password do not exist."),
-                                 'in')
-
-    login(request, user)
-    return redirect('todolist')
-
-
 def sign_out(request):
     if request.method == "POST":
         logout(request)
@@ -109,7 +75,7 @@ def sign_out(request):
 def todolist(request):
     todo_items = Todolist.objects.filter(user=request.user, completion_time=None)
     completed_todos = Todolist.objects.filter(user=request.user).exclude(completion_time=None)
-    return render(request, r'items\todolist.html', {'todo_items': todo_items, 'completed_todos': completed_todos})
+    return render(request, r'todolist.html', {'todo_items': todo_items, 'completed_todos': completed_todos})
 
 
 @login_required

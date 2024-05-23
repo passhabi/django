@@ -23,10 +23,11 @@ import todos.urls
 
 urlpatterns = ([
     path("", homepage , name='homepage'),
-    path('todo/', include(todos.urls), name='todo'),
+    path('todo/', include(todos.urls)),
 
     path('admin/', admin.site.urls),
-    path('sign-up-in/', sign_up_in, name='signupin'),
+    path('login/', signin, name='login'),
+    path('sign-up/', signup, name='signup'),
     path('logout/', sign_out, name='logout'),
     path('profile/', profile, name='profile'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
