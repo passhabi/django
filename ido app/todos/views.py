@@ -26,19 +26,20 @@ def signin(request):
             login(request, user)
             return redirect('todolist')
         else:
-            return render(request, 'sign-in.html', {'errors':["The combination of username and password do not exist.",]})
-        
+            return render(request, 'sign-in.html',
+                          {'errors': ["The combination of username and password do not exist.", ]})
+
     # It's a GET
     return render(request, 'sign-in.html')
-    
-    
 
 
 def signup(request):
+    # GET
+    return render(request, template_name='sign-up.html')
     "(POST) Registering the new user:"
     if request.POST['password1'] != request.POST['password2']:
         return render_sign_in(request, error_msg=ValidationError("The passwords you entered don't match."),
-                                 sign_up_or_in='up')
+                              sign_up_or_in='up')
 
     username = request.POST['username']
     password = request.POST['password1']
