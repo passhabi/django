@@ -1,15 +1,13 @@
-{% extends 'template.html' %}
+{% extends 'base.html' %}
 
-{% block title %}Login{% endblock %}
+{% block title %} Login{% endblock %}
 
 
-{% block login %}
-<div class="text-end">
+{% block login_or_signup_button %}
     <a href="{% url 'signup' %}" role="button" class="btn btn-warning">Sign-Up</a>
-</div>
 {% endblock %}
 
-{% block base %}
+{% block content %}
 <style>
     input[type="text"] {
         border-bottom-left-radius: 0px;
