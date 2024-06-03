@@ -42,7 +42,10 @@
             {% csrf_token %}
             {% load static %}
             <img class="mb-4" src="{% static 'logo-tick.png' %}" alt="" width="72" height="72">
-            <h1 class="h3 mb-3 font-weight-normal">Please Login</h1>
+            <div style="padding-top: 0rem !important;" class="py-5 text-center">
+                <h2>Please Login</h2>
+                <p class="lead">If you already have created an account. please log in to access your data.</p>
+              </div>
             <label for="inputUsername" class="visually-hidden">Username</label>
             <input name="username" type="text" id="inputUsername" class="form-control" placeholder="Username" required
                 autofocus>
