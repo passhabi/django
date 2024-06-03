@@ -16,7 +16,7 @@ from datetime import datetime
 def homepage(request):
     features = Features.objects.all()
 
-    return render(request, "homepage.html", {'features': features})
+    return render(request, "index.html", {'features': features})
 
 
 def signin(request):
