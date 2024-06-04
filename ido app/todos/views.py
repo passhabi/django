@@ -34,34 +34,50 @@ def signin(request):
 
 
 def signup(request):
-    # GET
-    return render(request, template_name='sign-up.html')
-    "(POST) Registering the new user:"
-    if request.POST['password1'] != request.POST['password2']:
-        return render_sign_in(request, error_msg=ValidationError("The passwords you entered don't match."),
-                              sign_up_or_in='up')
+    # (GET)
+    if request.method == 'GET':
+        return render(request, template_name='sign-up.html')
 
-    username = request.POST['username']
-    password = request.POST['password1']
-    email = request.POST['email']
+    # (POST) Registering the new user:
+    errors = {'firstname': 'is-valid',  # bootstrap class
+              'lastname': 'is-valid',
+              'email': 'is-valid',
+              'username': 'is-valid',
+              'password1': 'is-invalid',
+              'password2': 'is-invalid',
+              'password_details': []
+              }
 
-    # Validate and store into the database:
+    values = {
+        'firstname': request.POST['firstname'],
+        'lastname': request.POST['lastname'],
+        'username': request.POST['username'],
+        'email': request.POST['email'],
+    }
+
     try:
         validate_password(request.POST['password1'])
+        assert request.POST['password1'] == request.POST['password2']
 
-        # user = User.objects.create_user(username=username, email=email, password=password)
-        user = User(username=username, email=email)
-        user.set_password(password)
-        user.save()
+    except ValidationError as messages:
+        errors['password_details'] = messages
+        return render(request, template_name='sign-up.html', context={'errors': errors, 'values': values})
 
-        login(request, user)
+    except AssertionError:
+        errors['password_details'] = ['password does not match']
+        return render(request, template_name='sign-up.html', context={'errors': errors, 'values': values})
 
+    try:
+        user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password1'])
     except IntegrityError:
-        return render_sign_up_in(request, ValidationError("The username exists. Choose another username."), 'up')
+        errors['username'] = 'is-invalid'
+        return render(request, template_name='sign-up.html', context={'errors': errors, 'values': values})
 
-    except ValidationError as error_list:
-        return render_sign_up_in(request, error_msg=error_list, sign_up_or_in='up')
+    user.first_name = request.POST['firstname']
+    user.last_name = request.POST['lastname']
 
+    user.save()
+    login(request, user)
     return redirect('homepage')
 
 
