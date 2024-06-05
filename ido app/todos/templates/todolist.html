@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="width: 678px;">
+    <h2> Here is you todo list</h2>
+    <br>
+    <div class="list-group" style="float: left; width: 500px;">
+        <button type="button" class="list-group-item list-group-item-action active">
+            Title
+        </button>
+        {% for todo in todo_items %}
+        <a href="{% url 'todolist' %}{{ todo.id }}" style="text-decoration: none;">
+            {% if todo.priority == 1 %}
+            <button type="button" class="list-group-item list-group-item-action" style="color: red;">
+                {{ todo.title }} - {{ todo.creation_date|date:'M d' }}
+            </button>
+            {% elif todo.priority == 2 %}
+            <button type="button" class="list-group-item list-group-item-action" style="color: orange;">
+                {{ todo.title }}</button>
+            {% elif todo.priority == 3 %}
+            <button type="button" class="list-group-item list-group-item-action" style="color: rgb(56, 126, 255);">
+                {{ todo.title }}</button>
+            {% else %}
+            <button type="button" class="list-group-item list-group-item-action">
+                {{ todo.title }}</button>
+            {% endif %}
+        </a>
+        {% endfor %}
+        <br>
+        <a href="{% url 'add_todo' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Add</a>
+    </div>
+    <!--              DELETE             -->
+    <div class="list-group" style="float: right;">
+        <button type="button" class="list-group-item list-group-item-action active">
+            &nbsp;
+        </button>
+        {% for todo in todo_items %}
+        <form method="post" action="{% url 'delete' %}{{ todo.id }}" style="margin: 0;">
+            {% csrf_token %}
+            <button type="submit" class="list-group-item list-group-item-action">
+                delete
+            </button>
+        </form>
+        {% endfor %}
+    </div>
+    <!--              COMPLETE             -->
+    <div class="list-group" style="float: right;">
+        <button type="button" class="list-group-item list-group-item-action active">
+            &nbsp;
+        </button>
+        {% for todo in todo_items %}
+        <form method="post" action="{% url 'complete' %}{{ todo.id }}" style="margin: 0;">
+            {% csrf_token %}
+            <button type="submit" class="list-group-item list-group-item-action">
+                complete
+            </button>
+        </form>
+        {% endfor %}
+    </div>
+</div>
+
+
+<!-- completed todos  -->
+<!-- completed todos  -->
+<!-- completed todos  -->
+
+<div style="width: 625px;">
+    <div class="list-group" style="float: left; width: 500px;">
+        <p></p>
+        {% for todo in completed_todos %}
+        <a href="{% url 'todolist' %}{{ todo.id }}" style="text-decoration: none;">
+            <button type="button" class="list-group-item list-group-item-action not-active" style="color: darkgrey;">
+                <s>{{ todo.title }}</s>
+            </button>
+        </a>
+        {% endfor %}
+    </div>
+    <!--              COMPLETE             -->
+    <div class="list-group" style="float: right;">
+        <button type="button" class="list-group-item list-group-item-action active">
+        </button>
+        {% for todo in completed_todos %}
+        <form method="post" action="{% url 'uncomplete' %}{{ todo.id }}" style="margin: 0;">
+            {% csrf_token %}
+            <button type="submit" class="list-group-item list-group-item-action" style="color: darkgrey;">
+                un-complete
+            </button>
+        </form>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

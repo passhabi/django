@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %} Login{% endblock %}
+
+
+{% block login_or_signup_button %}
+    <a href="{% url 'signup' %}" role="button" class="btn btn-warning">Sign-Up</a>
+{% endblock %}
+
+{% block content %}
+<style>
+    input[type="text"] {
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    input[type="password"] {
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+        border-top: 0px;
+    }
+
+    .smallbox{
+        position: absolute;     
+        top: 50%;
+        padding: 10px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 320px;
+    }
+</style>
+
+<div class="text-center">
+    <div class="center">
+        {% for error in errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+            </br>
+        </div>
+        {% endfor %}
+        <form class="form-signin smallbox" method="post">
+            {% csrf_token %}
+            {% load static %}
+            <img class="mb-4" src="{% static 'logo-tick.png' %}" alt="" width="72" height="72">
+            <div style="padding-top: 0rem !important;" class="py-5 text-center">
+                <h2>Please Login</h2>
+                <p class="lead">If you have already created an account, please log in to access your data.</p>
+              </div>
+            <label for="inputUsername" class="visually-hidden">Username</label>
+            <input name="username" type="text" id="inputUsername" class="form-control" placeholder="Username" required
+                autofocus>
+            <label for="inputPassword" class="visually-hidden">Password</label>
+            <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password"
+                required>
+            <!-- {#        <div class="checkbox mb-3">#}
+            {#            <label>#}
+            {#                <input type="checkbox" class="mt-3" value="remember-me"> Remember me#}
+            {#            </label>#}
+            {#        </div>#} -->
+            <button class="btn btn-lg btn-primary btn-block mt-5" type="submit">Login</button>
+            <p class="mt-5 mb-3 text-muted">&copy; IDo 2024 - {% now "Y" %}</p>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
