@@ -26,9 +26,9 @@
               <li><a href="/" class="nav-link px-2 link-body-emphasis">IDo</a></li>
               <!-- <li><a href="/" class="nav-link px-2 link-secondary">IDo</a></li> -->
               {% if user.is_authenticated %}
-                  <li><a href="{% url 'add_todo' %}" class="nav-link px-2 link-body-emphasis">Create</a></li>
-                  <li><a href="{% url 'todolist' %}" class="nav-link px-2 link-body-emphasis">Todos</a></li>
-                  <li><a href="{% url 'complete' %}" class="nav-link px-2 link-body-emphasis">Completed</a></li>
+                  <li><a href="{% url 'add' %}" class="nav-link px-2 link-body-emphasis">Create</a></li>
+                  <li><a href="{% url 'list_todos' %}" class="nav-link px-2 link-body-emphasis">Todos</a></li>
+                  <li><a href="{% url 'completed' %}" class="nav-link px-2 link-body-emphasis">Completed</a></li>
               {% endif %}
           </ul>
           

@@ -89,10 +89,10 @@ def sign_out(request):
 
 
 @login_required(redirect_field_name='signupin')
-def todolist(request):
+def list_todos(request):
     todo_items = Todolist.objects.filter(user=request.user, completion_time=None)
     completed_todos = Todolist.objects.filter(user=request.user).exclude(completion_time=None)
-    return render(request, r'todolist.html', {'todo_items': todo_items, 'completed_todos': completed_todos})
+    return render(request, r'list_todos.html', {'todo_items': todo_items, 'completed_todos': completed_todos})
 
 
 @login_required
@@ -106,51 +106,51 @@ def detailed_todo(request, id):
     # POST:
     todolist_form = TodolistForm(request.POST, instance=todo)
     todolist_form.save()
-    return redirect('todolist')
+    return redirect('list_todos')
 
 
 @login_required
 def add_todo(request):
     if request.method == 'GET':
-        return render(request, 'items/todolist_additem.html', {'todo_additem_form': TodolistForm()})
+        return render(request, 'add_todo.html', {'todo_additem_form': TodolistForm()})
 
     newitem = TodolistForm(request.POST)
     newitem.save(commit=False).user = request.user
     newitem.save()
-    return redirect('todolist')
+    return redirect('list_todos')
 
 
 @login_required
 def delete_todo(request, id):
     if request.method == 'GET':
-        return redirect('todolist')
+        return redirect('list_todos')
 
     todo = get_object_or_404(Todolist, id=id, user=request.user)
     todo.delete()
 
-    return redirect('todolist')
+    return redirect('list_todos')
 
 
 @login_required
-def complete_todo(request, id):
+def completed_todos(request, id):
     if request.method == 'GET':
-        return redirect('todolist')
+        return redirect('list_todos')
 
     todo = Todolist.objects.filter(id=id, user=request.user)
     todo.update(completion_time=datetime.now())
 
-    return redirect('todolist')
+    return redirect('list_todos')
 
 
 @login_required
-def un_complete_todo(request, id):
+def un_completed_todos(request, id):
     if request.method == 'GET':
-        return redirect('todolist')
+        return redirect('list_todos')
 
     todo = Todolist.objects.filter(id=id, user=request.user)
     todo.update(completion_time=None)
 
-    return redirect('todolist')
+    return redirect('list_todos')
 
 
 @login_required

@@ -2,14 +2,15 @@ from todos.views import *
 from django.urls import path
 
 urlpatterns = ([
-    path('todolist/', todolist, name='todolist'),
-    path('todolist/<int:id>', detailed_todo, name='todolist'),
+    path('list/', list_todos, name='list_todos'),
+    path('item/', detailed_todo, name='item'),
+    path('item/<int:id>', detailed_todo, name='item'),
     path('delete/', delete_todo, name='delete'),
     path('delete/<int:id>', delete_todo, name='delete'),
-    path('complete/', complete_todo, name='complete'),
-    path('complete/<int:id>', complete_todo, name='complete'),
-    path('uncomplete/', un_complete_todo, name='uncomplete'),
-    path('uncomplete/<int:id>', un_complete_todo, name='uncomplete'),
-    path('add/', add_todo, name='add_todo'),
+    path('completed/', completed_todos, name='completed'),
+    path('completed/<int:id>', completed_todos, name='completed'),
+    path('uncompleted/', un_completed_todos, name='uncompleted'),
+    path('uncompleted/<int:id>', un_completed_todos, name='uncompleted'),
+    path('add/', add_todo, name='add'),
 
 ])
