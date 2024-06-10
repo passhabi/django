@@ -30,5 +30,7 @@ urlpatterns = ([
     path('sign-up/', signup, name='signup'),
     path('logout/', sign_out, name='logout'),
     path('profile/', profile, name='profile'),
+    path("__debug__/", include("debug_toolbar.urls")),
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
                + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))
