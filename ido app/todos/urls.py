@@ -9,7 +9,7 @@ urlpatterns = ([
     path('delete/<int:id>', delete_todo, name='delete'),
     path('completed/', completed_todos, name='completed'),
     # path('completed/<int:id>', completed_todos, name='completed'),
-    path('uncompleted/', un_completed_todos, name='uncompleted'),
-    path('uncompleted/<int:id>', un_completed_todos, name='uncompleted'),
+    path('uncompleted/', un_complete_todos, name='un_complete'),
+    path('uncompleted/<int:id>', un_complete_todos, name='un_complete'),
     path('add/', add_todo, name='add'),
     ])
