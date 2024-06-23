@@ -1,92 +1,98 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block content %}
-<div style="width: 678px;">
-    <h2> Here is you todo list</h2>
-    <br>
-    <div class="list-group" style="float: left; width: 500px;">
-        <button type="button" class="list-group-item list-group-item-action active">
-            Title
-        </button>
-        {% for todo in todo_items %}
-        <a href="{% url 'item' %}{{ todo.id }}" style="text-decoration: none;">
-            {% if todo.priority == 1 %}
-            <button type="button" class="list-group-item list-group-item-action" style="color: red;">
-                {{ todo.title }} - {{ todo.creation_date|date:'M d' }}
-            </button>
-            {% elif todo.priority == 2 %}
-            <button type="button" class="list-group-item list-group-item-action" style="color: orange;">
-                {{ todo.title }}</button>
-            {% elif todo.priority == 3 %}
-            <button type="button" class="list-group-item list-group-item-action" style="color: rgb(56, 126, 255);">
-                {{ todo.title }}</button>
-            {% else %}
-            <button type="button" class="list-group-item list-group-item-action">
-                {{ todo.title }}</button>
-            {% endif %}
-        </a>
-        {% endfor %}
-        <br>
-        <a href="{% url 'add' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Add</a>
-    </div>
-    <!--              DELETE             -->
-    <div class="list-group" style="float: right;">
-        <button type="button" class="list-group-item list-group-item-action active">
-            &nbsp;
-        </button>
-        {% for todo in todo_items %}
-        <form method="post" action="{% url 'delete' %}{{ todo.id }}" style="margin: 0;">
-            {% csrf_token %}
-            <button type="submit" class="list-group-item list-group-item-action">
-                delete
-            </button>
-        </form>
-        {% endfor %}
-    </div>
-    <!--              COMPLETE             -->
-    <div class="list-group" style="float: right;">
-        <button type="button" class="list-group-item list-group-item-action active">
-            &nbsp;
-        </button>
-        {% for todo in todo_items %}
-        <form method="post" action="{% url 'completed' %}{{ todo.id }}" style="margin: 0;">
-            {% csrf_token %}
-            <button type="submit" class="list-group-item list-group-item-action">
-                complete
-            </button>
-        </form>
-        {% endfor %}
-    </div>
-</div>
+    <style>
+        .dropdown {
+            float: right;
+        }
 
+        .form-select-sm {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            text-overflow: '';
+            font-size: smaller;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-right: 5px;
+            margin-left: 5px;
+        }
 
-<!-- completed todos  -->
-<!-- completed todos  -->
-<!-- completed todos  -->
+        .btn {
+            font-size: x-small;
+            border-color: grey;
+            color: grey;
+            margin-left: 10px;
+        }
 
-<div style="width: 625px;">
-    <div class="list-group" style="float: left; width: 500px;">
-        <p></p>
-        {% for todo in completed_todos %}
-        <a href="{% url 'list_todos' %}{{ todo.id }}" style="text-decoration: none;">
-            <button type="button" class="list-group-item list-group-item-action not-active" style="color: darkgrey;">
-                <s>{{ todo.title }}</s>
-            </button>
-        </a>
-        {% endfor %}
+        .btn.active {
+            border-color: grey;
+            color: grey;
+            background-color: white;
+        }
+
+        .btn.active:hover {
+            background-color: royalblue;
+            color: white;
+        }
+
+        span.badge.rounded-pill {
+            font-size: xx-small;
+            background-color: grey;
+        }
+    </style>
+
+    <div class="center">
+        <div style="text-align: right; font-size: small">
+            Sort by:
+            <form id="SortForm" class="dropdown" method="post" action="{% url 'reverse_the_order' %}"
+                  Onchange="let el=document.getElementById('SortForm');el.submit();">
+                {% csrf_token %}
+                <select class=" form-select-sm" id="sort-by" name="sort-by">
+                    {% if user_view_settings.is_descending %}
+                        <option value="ace">ace</option>
+                        <option value="dec" selected>dec</option>
+                    {% else %}
+                        <option value="ace" selected>ace</option>
+                        <option value="dec">dec</option>
+                    {% endif %}
+                </select>
+            </form>
+            <form id="OrderForm" class="dropdown" method="post" action="{% url 'order_it_by' %}"
+                  Onchange="let el=document.getElementById('OrderForm');el.submit();">
+                {% csrf_token %}
+                {% load cut_underscores %}
+
+                <select class=" form-select-sm" id="sort-by" name="orderby">
+                    {% for  order_db, order_readable in user_view_settings.ORDER_BY_CHOICES.items %}
+                        <option value="{{ order_readable }}"
+                                {% if order_db ==  user_view_settings.order_by %} selected {% endif %}>
+                            {{ order_readable | cut_underscores:'_' }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+        <p style="text-align: end; font-size: smaller; padding-right: 5px;"></p>
+        <ul class="list-group">
+            {% for todo in todo_items %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{% url 'item' todo.id %}"> {{ todo.title }} </a>
+
+                    {# bug: title can overflows #}
+                    <form method="post" action="{% url 'mark_as_complete' todo.id %}">
+                        {% csrf_token %}
+                        <div>
+                            {% if todo.due_date %}
+                                <span class="badge rounded-pill">{{ todo.due_date|date:'d M' }}</span>
+                            {% endif %}
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+                                {#                        <button type="button" class="btn btn-outline-primary">🗑️</button>#}
+                                <button type="submit" class="btn btn-outline-primary">✓</button>
+                            </div>
+                        </div>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
     </div>
-    <!--              COMPLETE             -->
-    <div class="list-group" style="float: right;">
-        <button type="button" class="list-group-item list-group-item-action active">
-        </button>
-        {% for todo in completed_todos %}
-        <form method="post" action="{% url 'uncompleted' %}{{ todo.id }}" style="margin: 0;">
-            {% csrf_token %}
-            <button type="submit" class="list-group-item list-group-item-action" style="color: darkgrey;">
-                un-complete
-            </button>
-        </form>
-        {% endfor %}
-    </div>
-</div>
 {% endblock %}

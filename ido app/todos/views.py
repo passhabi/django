@@ -5,7 +5,7 @@ from django.db import IntegrityError
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.contrib.auth import login, logout, authenticate
-from todos.models import Todolist, Features
+from todos.models import Todolist, UserSetting
 from todos.forms import TodolistForm
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
@@ -14,9 +14,7 @@ from datetime import datetime
 
 # Create your views here.
 def homepage(request):
-    features = Features.objects.all()
-
-    return render(request, "index.html", {"features": features})
+    return render(request, "index.html")
 
 
 def signin(request):
@@ -70,7 +68,7 @@ def signup(request):
     try:
         validate_password(request.POST["password1"])
         assert request.POST["password1"] == request.POST["password2"]
-
+        # bugs: the password week messages doesn't show up!
     except ValidationError as messages:
         errors["password_details"] = messages
         return render(
@@ -114,32 +112,62 @@ def sign_out(request):
     return redirect("homepage")
 
 
-@login_required(redirect_field_name="signupin")
+def reverse_the_order(request, is_dec):
+    pass
+
+
+@login_required(login_url="login")
+def order_it_by(request):
+    user = User.objects.get(username=request.user)
+
+    user.usersetting.order_by = request.POST['orderby'][0]  # take the first letter. e.g. title >>> 't'
+    user.usersetting.save()
+
+    return list_todos(request)
+
+
+@login_required(login_url="login")
+def reverse_the_order(request):
+    user = User.objects.get(username=request.user)
+    user.usersetting.is_descending = not user.usersetting.is_descending
+    user.usersetting.save()
+
+    return list_todos(request)
+
+
+@login_required(redirect_field_name="login")
 def list_todos(request):
+    user = User.objects.get(username=request.user)
+    user_view_settings = user.usersetting
+
     todo_items = Todolist.objects.filter(user=request.user, completion_time=None)
-    completed_todos = Todolist.objects.filter(user=request.user).exclude(
-        completion_time=None
-    )
+
+    # add view settings to template:
+    query_str = '-'
+    if user_view_settings.is_descending:
+        query_str = ''
+    query_str += user_view_settings.ORDER_BY_CHOICES[user_view_settings.order_by]
+
+    todo_items = todo_items.order_by(query_str)  # sort items by query_set
+
     return render(
         request,
         r"list_todos.html",
-        {"todo_items": todo_items, "completed_todos": completed_todos},
+        {"todo_items": todo_items,
+         "user_view_settings": user_view_settings, },
     )
 
 
 @login_required
 def detailed_todo(request, id):
-
     todo = get_object_or_404(Todolist, pk=id, user=request.user)
 
     if request.method == "GET":
         return render_edit_page(request, todo)
-        
+
     # POST:
     if request.POST["button"] == "complete_button":
-        todo.completion_time = datetime.now()
-        todo.save()
-        return redirect("list_todos")
+        return make_as_completed(request, id)
 
     if request.POST["button"] == "save_button":
         todolist_form = TodolistForm(request.POST, instance=todo)
@@ -147,6 +175,12 @@ def detailed_todo(request, id):
 
         todo = get_object_or_404(Todolist, pk=id, user=request.user)
         return render_edit_page(request, todo, True)
+
+    if request.POST["button"] == "delete":
+        todolist_form = TodolistForm(request.POST, instance=todo)
+        todo.delete()
+
+        return redirect('list_todos')
 
 
 def render_edit_page(request, todo, saved: bool = False):
@@ -190,9 +224,9 @@ def delete_todo(request, id):
 
 
 @login_required
-def completed_todos(request):
+def list_completed_todos(request):
     if request.method == "GET":
-        completed_todos = Todolist.objects.filter(completion_time__isnull = False).order_by('-completion_time')
+        completed_todos = Todolist.objects.filter(completion_time__isnull=False).order_by('-completion_time')
         completed_todos = list(completed_todos)
         return render(request, 'completed.html', context={'completed_todos': completed_todos})
 
@@ -206,8 +240,16 @@ def completed_todos(request):
 def un_complete_todos(request, id):
     todo = Todolist.objects.filter(id=id, user=request.user)
     todo.update(completion_time=None)
-    
+
     return redirect("completed")
+
+
+def make_as_completed(request, id):
+    todo = get_object_or_404(Todolist, pk=id, user=request.user)
+
+    todo.completion_time = datetime.now()
+    todo.save()
+    return redirect("list_todos")
 
 
 @login_required

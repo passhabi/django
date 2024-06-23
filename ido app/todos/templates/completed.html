@@ -1,51 +1,55 @@
 {% extends 'base.html' %}
 
+{% block custom_css %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+{% endblock %}
+
 {% block content %}
-<style>
+    <style>
 
-  form{
-    float: right;
-  }
+        form {
+            float: right;
+        }
 
-  th p{
-    text-decoration: none;
-    font-weight: normal;
-    font-size: small;
-  }
+        th p {
+            text-decoration: none;
+            font-weight: normal;
+            font-size: small;
+        }
 
-  th span{
-    text-decoration: line-through;
-    color: darkslategray;
-    font-weight: normal;
-  }
+        th span {
+            text-decoration: line-through;
+            color: darkslategray;
+            font-weight: normal;
+        }
 
 
-
-</style>
-  <div class="center">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Completed Todo</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      {% for todo in completed_todos %}
-        <thead>
-          <tr>
-            <th scope="col">
-              <span>{{ todo.title }}</span>
-              <p>{{ todo.completion_time }}</p>
-            </th>
-            <th scope="col">
-              <form method="post" action="{% url 'un_complete' %}{{ todo.id }}">
-                {% csrf_token %}
-                <button type="submit" class="list-group-item list-group-item-action">un-complete</button>
-              </form>
-            </th>
-          </tr>
-        </thead>
-      {% endfor %}
-    </table>
-  </div>
+    </style>
+    <div class="center">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Completed Todo</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            {% for todo in completed_todos %}
+                <thead>
+                <tr>
+                    <th scope="col">
+                        <span>{{ todo.title }}</span>
+                        <p>{{ todo.completion_time }}</p>
+                    </th>
+                    <th scope="col">
+                        <form method="post" action="{% url 'un_complete' %}{{ todo.id }}">
+                            {% csrf_token %}
+                            <button type="submit" class="list-group-item list-group-item-action">un-complete</button>
+                        </form>
+                    </th>
+                </tr>
+                </thead>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}

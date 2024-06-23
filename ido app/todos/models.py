@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from collections import namedtuple
 
 PRIORITY_CHOICES = {
     1: 'Important and Urgent',
@@ -25,10 +26,13 @@ class Todolist(models.Model):
         return self.title
 
 
-class Features(models.Model):
-    title = models.CharField(null=False, blank=False, max_length=300)
-    description = models.TextField(blank=True, null=True)
-    icon = models.ImageField(upload_to="image/", blank=False, null=False)
+class UserSetting(models.Model):
+    ORDER_BY_CHOICES = {'d': 'due_date', 't': 'title', 'c': 'creation_date'}
 
-    def __str__(self):
-        return self.title
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    order_by = models.CharField(null=False, blank=False, max_length=1, default=ORDER_BY_CHOICES['d'],
+                                choices=ORDER_BY_CHOICES)
+    is_descending = models.BooleanField(default=True, blank=False, null=False)
+
+    def __str__(self) -> str:
+        return "Todo list view"
