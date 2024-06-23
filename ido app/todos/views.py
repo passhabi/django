@@ -99,8 +99,9 @@ def signup(request):
 
     user.first_name = request.POST["firstname"]
     user.last_name = request.POST["lastname"]
-
+    user.usersetting = UserSetting.objects.create(user=user, )
     user.save()
+
     login(request, user)
     return redirect("homepage")
 
